@@ -25,9 +25,6 @@ RUN npm run build
 # Remove dev dependencies to reduce image size
 RUN npm prune --production
 
-# Copy environment file if it exists
-COPY .env.production ./.env 2>/dev/null || true
-
 # Set ownership
 RUN chown -R nodejs:nodejs /app
 
