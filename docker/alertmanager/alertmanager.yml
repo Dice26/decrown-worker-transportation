@@ -1,0 +1,168 @@
+# Production Alertmanager Configuration for DeCrown Transport
+global:
+  smtp_smarthost: 'localhost:587'
+  smtp_from: 'alerts@yourdomain.com'
+  smtp_auth_username: 'alerts@yourdomain.com'
+  smtp_auth_password: 'your-email-password'
+
+# Templates for alert notifications
+templates:
+  - '/etc/alertmanager/templates/*.tmpl'
+
+# Routing configuration
+route:
+  group_by: ['alertname', 'service']
+  group_wait: 10s
+  group_interval: 10s
+  repeat_interval: 1h
+  receiver: 'web.hook'
+  routes:
+  # Critical alerts go to multiple channels
+  - match:
+      severity: critical
+    receiver: 'critical-alerts'
+    group_wait: 5s
+    repeat_interval: 30m
+  
+  # Payment-related alerts
+  - match:
+      service: payment
+    receiver: 'payment-team'
+    group_wait: 30s
+    repeat_interval: 2h
+  
+  # Security alerts
+  - match:
+      service: security
+    receiver: 'security-team'
+    group_wait: 5s
+    repeat_interval: 1h
+  
+  # Database alerts
+  - match:
+      service: database
+    receiver: 'infrastructure-team'
+    group_wait: 10s
+    repeat_interval: 1h
+
+# Alert receivers
+receivers:
+- name: 'web.hook'
+  webhook_configs:
+  - url: 'http://127.0.0.1:5001/'
+
+# Critical alerts - multiple notification channels
+- name: 'critical-alerts'
+  email_configs:
+  - to: 'oncall@yourdomain.com'
+    subject: '[CRITICAL] DeCrown Transport Alert'
+    body: |
+      Alert: {{ .GroupLabels.alertname }}
+      Service: {{ .GroupLabels.service }}
+      Severity: {{ .CommonLabels.severity }}
+      
+      {{ range .Alerts }}
+      Summary: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      {{ if .Annotations.runbook_url }}Runbook: {{ .Annotations.runbook_url }}{{ end }}
+      {{ end }}
+  
+  slack_configs:
+  - api_url: 'YOUR_SLACK_WEBHOOK_URL'
+    channel: '#alerts-critical'
+    title: 'DeCrown Transport Critical Alert'
+    text: |
+      *Alert:* {{ .GroupLabels.alertname }}
+      *Service:* {{ .GroupLabels.service }}
+      *Severity:* {{ .CommonLabels.severity }}
+      
+      {{ range .Alerts }}
+      *Summary:* {{ .Annotations.summary }}
+      *Description:* {{ .Annotations.description }}
+      {{ if .Annotations.runbook_url }}*Runbook:* {{ .Annotations.runbook_url }}{{ end }}
+      {{ end }}
+    send_resolved: true
+
+# Payment team notifications
+- name: 'payment-team'
+  email_configs:
+  - to: 'payment-team@yourdomain.com'
+    subject: '[PAYMENT] DeCrown Transport Alert'
+    body: |
+      Payment System Alert
+      
+      {{ range .Alerts }}
+      Summary: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      {{ end }}
+  
+  slack_configs:
+  - api_url: 'YOUR_SLACK_WEBHOOK_URL'
+    channel: '#payment-alerts'
+    title: 'Payment System Alert'
+    text: |
+      {{ range .Alerts }}
+      *Summary:* {{ .Annotations.summary }}
+      *Description:* {{ .Annotations.description }}
+      {{ end }}
+
+# Security team notifications
+- name: 'security-team'
+  email_configs:
+  - to: 'security@yourdomain.com'
+    subject: '[SECURITY] DeCrown Transport Alert'
+    body: |
+      Security Alert Detected
+      
+      {{ range .Alerts }}
+      Summary: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      {{ end }}
+  
+  slack_configs:
+  - api_url: 'YOUR_SLACK_WEBHOOK_URL'
+    channel: '#security-alerts'
+    title: 'Security Alert'
+    text: |
+      🚨 *Security Alert Detected*
+      
+      {{ range .Alerts }}
+      *Summary:* {{ .Annotations.summary }}
+      *Description:* {{ .Annotations.description }}
+      {{ end }}
+
+# Infrastructure team notifications
+- name: 'infrastructure-team'
+  email_configs:
+  - to: 'infrastructure@yourdomain.com'
+    subject: '[INFRA] DeCrown Transport Alert'
+    body: |
+      Infrastructure Alert
+      
+      {{ range .Alerts }}
+      Summary: {{ .Annotations.summary }}
+      Description: {{ .Annotations.description }}
+      {{ end }}
+  
+  slack_configs:
+  - api_url: 'YOUR_SLACK_WEBHOOK_URL'
+    channel: '#infrastructure-alerts'
+    title: 'Infrastructure Alert'
+    text: |
+      {{ range .Alerts }}
+      *Summary:* {{ .Annotations.summary }}
+      *Description:* {{ .Annotations.description }}
+      {{ end }}
+
+# Inhibition rules to prevent alert spam
+inhibit_rules:
+- source_match:
+    severity: 'critical'
+  target_match:
+    severity: 'warning'
+  equal: ['alertname', 'service']
+
+- source_match:
+    alertname: 'ApplicationDown'
+  target_match_re:
+    alertname: '(HighErrorRate|HighResponseTime)'

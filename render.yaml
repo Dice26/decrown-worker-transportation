@@ -1,0 +1,80 @@
+services:
+  # Main Web Application
+  - type: web
+    name: decrown-worker-transportation
+    env: docker
+    dockerfilePath: ./Dockerfile.simple
+    region: oregon
+    plan: free
+    branch: main
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: APP_URL
+        value: https://www.gowithdecrown.com
+      - key: API_URL
+        sync: false
+      - key: WEB_APP_URL
+        sync: false
+      - key: DATABASE_URL
+        fromDatabase:
+          name: decrown-postgres
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          name: decrown-redis
+          type: redis
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+        sync: false
+      - key: JWT_EXPIRATION
+        value: 15m
+      - key: REFRESH_TOKEN_EXPIRATION
+        value: 7d
+      - key: ENCRYPTION_KEY
+        generateValue: true
+        sync: false
+      - key: BCRYPT_ROUNDS
+        value: 12
+      - key: FEATURE_LOCATION_TRACKING
+        value: true
+      - key: FEATURE_REAL_TIME_UPDATES
+        value: true
+      - key: FEATURE_PAYMENT_PROCESSING
+        value: true
+      - key: FEATURE_AUDIT_LOGGING
+        value: true
+      - key: CORS_ORIGIN
+        value: https://www.gowithdecrown.com,https://app.gowithdecrown.com,https://api.gowithdecrown.com
+      - key: CORS_CREDENTIALS
+        value: true
+      - key: RATE_LIMIT_WINDOW_MS
+        value: 60000
+      - key: RATE_LIMIT_MAX_REQUESTS
+        value: 100
+      - key: LOG_LEVEL
+        value: info
+      - key: LOG_FORMAT
+        value: json
+
+databases:
+  # PostgreSQL Database with PostGIS
+  - name: decrown-postgres
+    databaseName: decrown_transport_prod
+    user: decrown_user
+    region: oregon
+    plan: free
+    ipAllowList: []
+
+# Redis Cache and Queue
+- type: redis
+  name: decrown-redis
+  region: oregon
+  plan: free
+  maxmemoryPolicy: allkeys-lru
+  ipAllowList: []

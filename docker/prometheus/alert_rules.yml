@@ -1,0 +1,200 @@
+# Production Alert Rules for DeCrown Transport
+groups:
+- name: decrown-transport-critical
+  rules:
+  # Application Health Alerts
+  - alert: ApplicationDown
+    expr: up{job="decrown-transport-app"} == 0
+    for: 1m
+    labels:
+      severity: critical
+      service: application
+    annotations:
+      summary: "DeCrown Transport application is down"
+      description: "The main application has been down for more than 1 minute"
+      runbook_url: "https://docs.yourdomain.com/runbooks/app-down"
+
+  - alert: HighErrorRate
+    expr: rate(http_requests_total{status=~"5.."}[5m]) > 0.1
+    for: 5m
+    labels:
+      severity: critical
+      service: application
+    annotations:
+      summary: "High error rate detected"
+      description: "Error rate is {{ $value }} errors per second over the last 5 minutes"
+      runbook_url: "https://docs.yourdomain.com/runbooks/high-error-rate"
+
+  - alert: HighResponseTime
+    expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 5
+    for: 10m
+    labels:
+      severity: warning
+      service: application
+    annotations:
+      summary: "High response time detected"
+      description: "95th percentile response time is {{ $value }}s over the last 10 minutes"
+
+  # Database Alerts
+  - alert: DatabaseDown
+    expr: up{job="postgres-exporter"} == 0
+    for: 1m
+    labels:
+      severity: critical
+      service: database
+    annotations:
+      summary: "PostgreSQL database is down"
+      description: "The PostgreSQL database has been unreachable for more than 1 minute"
+      runbook_url: "https://docs.yourdomain.com/runbooks/db-down"
+
+  - alert: DatabaseHighConnections
+    expr: pg_stat_database_numbackends / pg_settings_max_connections * 100 > 80
+    for: 5m
+    labels:
+      severity: warning
+      service: database
+    annotations:
+      summary: "Database connection usage is high"
+      description: "Database is using {{ $value }}% of available connections"
+
+  - alert: DatabaseSlowQueries
+    expr: rate(pg_stat_database_tup_returned[5m]) / rate(pg_stat_database_tup_fetched[5m]) < 0.1
+    for: 10m
+    labels:
+      severity: warning
+      service: database
+    annotations:
+      summary: "Database queries are running slowly"
+      description: "Query efficiency has dropped to {{ $value }}%"
+
+  # Redis Alerts
+  - alert: RedisDown
+    expr: up{job="redis-exporter"} == 0
+    for: 1m
+    labels:
+      severity: critical
+      service: cache
+    annotations:
+      summary: "Redis cache is down"
+      description: "Redis has been unreachable for more than 1 minute"
+      runbook_url: "https://docs.yourdomain.com/runbooks/redis-down"
+
+  - alert: RedisHighMemoryUsage
+    expr: redis_memory_used_bytes / redis_memory_max_bytes * 100 > 90
+    for: 5m
+    labels:
+      severity: warning
+      service: cache
+    annotations:
+      summary: "Redis memory usage is high"
+      description: "Redis is using {{ $value }}% of available memory"
+
+  # System Resource Alerts
+  - alert: HighMemoryUsage
+    expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100 > 90
+    for: 5m
+    labels:
+      severity: warning
+      service: system
+    annotations:
+      summary: "High memory usage detected"
+      description: "Memory usage is {{ $value }}% on {{ $labels.instance }}"
+
+  - alert: HighCPUUsage
+    expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+    for: 10m
+    labels:
+      severity: warning
+      service: system
+    annotations:
+      summary: "High CPU usage detected"
+      description: "CPU usage is {{ $value }}% on {{ $labels.instance }}"
+
+  - alert: DiskSpaceLow
+    expr: (node_filesystem_avail_bytes / node_filesystem_size_bytes) * 100 < 10
+    for: 5m
+    labels:
+      severity: critical
+      service: system
+    annotations:
+      summary: "Disk space is running low"
+      description: "Disk space is {{ $value }}% full on {{ $labels.instance }}"
+
+- name: decrown-transport-business
+  rules:
+  # Payment Processing Alerts
+  - alert: PaymentFailureRateHigh
+    expr: rate(payment_attempts_total{status="failed"}[10m]) / rate(payment_attempts_total[10m]) > 0.1
+    for: 5m
+    labels:
+      severity: warning
+      service: payment
+    annotations:
+      summary: "High payment failure rate"
+      description: "Payment failure rate is {{ $value }}% over the last 10 minutes"
+
+  - alert: LocationTrackingDown
+    expr: rate(location_updates_total[5m]) == 0
+    for: 10m
+    labels:
+      severity: warning
+      service: location
+    annotations:
+      summary: "No location updates received"
+      description: "No location updates have been received for 10 minutes"
+
+  # Trip Management Alerts
+  - alert: TripCompletionRateLow
+    expr: rate(trips_total{status="completed"}[1h]) / rate(trips_total{status="started"}[1h]) < 0.8
+    for: 30m
+    labels:
+      severity: warning
+      service: transport
+    annotations:
+      summary: "Trip completion rate is low"
+      description: "Only {{ $value }}% of trips are being completed successfully"
+
+  # Audit and Compliance Alerts
+  - alert: AuditLogIntegrityFailure
+    expr: audit_integrity_check_failures_total > 0
+    for: 0m
+    labels:
+      severity: critical
+      service: audit
+    annotations:
+      summary: "Audit log integrity check failed"
+      description: "{{ $value }} audit integrity failures detected"
+      runbook_url: "https://docs.yourdomain.com/runbooks/audit-integrity"
+
+- name: decrown-transport-security
+  rules:
+  # Security Alerts
+  - alert: UnauthorizedAccessAttempts
+    expr: rate(http_requests_total{status="401"}[5m]) > 10
+    for: 2m
+    labels:
+      severity: warning
+      service: security
+    annotations:
+      summary: "High number of unauthorized access attempts"
+      description: "{{ $value }} unauthorized access attempts per second"
+
+  - alert: RateLimitExceeded
+    expr: rate(http_requests_total{status="429"}[5m]) > 5
+    for: 5m
+    labels:
+      severity: warning
+      service: security
+    annotations:
+      summary: "Rate limit frequently exceeded"
+      description: "Rate limit exceeded {{ $value }} times per second"
+
+  - alert: SuspiciousPaymentActivity
+    expr: rate(payment_attempts_total{amount=">10000"}[1h]) > 5
+    for: 0m
+    labels:
+      severity: warning
+      service: security
+    annotations:
+      summary: "Suspicious high-value payment activity"
+      description: "{{ $value }} high-value payment attempts in the last hour"

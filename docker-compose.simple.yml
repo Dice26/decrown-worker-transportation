@@ -1,0 +1,79 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database with PostGIS and TimescaleDB
+  postgres:
+    image: timescale/timescaledb-ha:pg14-latest
+    container_name: decrown-postgres
+    environment:
+      POSTGRES_DB: decrown_transport_prod
+      POSTGRES_USER: decrown_user
+      POSTGRES_PASSWORD: CHANGE_THIS_SECURE_PASSWORD
+      POSTGRES_INITDB_ARGS: "-E UTF8"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U decrown_user -d decrown_transport_prod"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # Redis Cache and Queue
+  redis:
+    image: redis:7-alpine
+    container_name: decrown-redis
+    command: redis-server --requirepass CHANGE_THIS_REDIS_PASSWORD
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+  # DeCrown Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.simple
+    container_name: decrown-app
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: decrown_transport_prod
+      DB_USER: decrown_user
+      DB_PASSWORD: CHANGE_THIS_SECURE_PASSWORD
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: CHANGE_THIS_REDIS_PASSWORD
+      APP_URL: https://www.gowithdecrown.com
+      API_URL: https://api.gowithdecrown.com
+      WEB_APP_URL: https://app.gowithdecrown.com
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
