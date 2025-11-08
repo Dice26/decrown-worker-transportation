@@ -723,25 +723,6 @@
         </div>
     </section>
 
-    <!-- API Status -->
-    <section class="api-status">
-        <div class="container">
-            <h2 class="section-title">System Status</h2>
-            <div class="status-card">
-                <div id="apiStatus" class="status-indicator checking">
-                    <span class="status-dot pulse"></span>
-                    <span>Checking API...</span>
-                </div>
-                <div id="apiInfo" class="api-info">
-                    <div class="api-info-item">
-                        <span class="api-info-label">Status:</span>
-                        <span class="api-info-value">Loading...</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
@@ -794,72 +775,9 @@
             }
         };
 
-        // Check API Status on load
-        async function checkAPIStatus() {
-            const statusElement = document.getElementById('apiStatus');
-            const apiInfoElement = document.getElementById('apiInfo');
-
-            try {
-                const response = await fetch(`${API_URL}/`);
-                const data = await response.json();
-
-                if (response.ok) {
-                    statusElement.className = 'status-indicator online';
-                    statusElement.innerHTML = '<span class="status-dot"></span><span>API Online ✅</span>';
-
-                    apiInfoElement.innerHTML = `
-                        <div class="api-info-item">
-                            <span class="api-info-label">Status:</span>
-                            <span class="api-info-value">${data.status}</span>
-                        </div>
-                        <div class="api-info-item">
-                            <span class="api-info-label">Version:</span>
-                            <span class="api-info-value">${data.version}</span>
-                        </div>
-                        <div class="api-info-item">
-                            <span class="api-info-label">Message:</span>
-                            <span class="api-info-value">${data.message}</span>
-                        </div>
-                        <div class="api-info-item">
-                            <span class="api-info-label">API URL:</span>
-                            <span class="api-info-value">${API_URL}</span>
-                        </div>
-                        <div class="api-info-item">
-                            <span class="api-info-label">Available Endpoints:</span>
-                            <span class="api-info-value">${Object.keys(data.endpoints || {}).length} endpoints</span>
-                        </div>
-                    `;
-                }
-            } catch (error) {
-                statusElement.className = 'status-indicator offline';
-                statusElement.innerHTML = '<span class="status-dot"></span><span>API Offline ❌</span>';
-
-                apiInfoElement.innerHTML = `
-                    <div class="api-info-item">
-                        <span class="api-info-label">Error:</span>
-                        <span class="api-info-value">Unable to connect to API</span>
-                    </div>
-                    <div class="api-info-item">
-                        <span class="api-info-label">API URL:</span>
-                        <span class="api-info-value">${API_URL}</span>
-                    </div>
-                    <div class="api-info-item">
-                        <span class="api-info-label">Details:</span>
-                        <span class="api-info-value">${error.message}</span>
-                    </div>
-                    <div class="api-info-item">
-                        <span class="api-info-label">Note:</span>
-                        <span class="api-info-value">Free tier services sleep after inactivity. First request may take 30-60s.</span>
-                    </div>
-                `;
-            }
-        }
-
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', () => {
-            checkAPIStatus();
-            // Refresh API status every 30 seconds
-            setInterval(checkAPIStatus, 30000);
+            // Page is ready
         });
 
         // Smooth scroll for anchor links
