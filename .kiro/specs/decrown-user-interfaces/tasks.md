@@ -10,14 +10,16 @@
   - _Requirements: All_
 
 - [ ] 2. Implement Worker Registration Flow
-- [ ] 2.1 Create registration form components
+- [x] 2.1 Create registration form components
+
   - Build Welcome screen component
   - Create Personal Information form with validation
   - Implement password strength indicator
   - Add terms and conditions checkbox
   - _Requirements: 1.1, 1.2_
 
-- [ ] 2.2 Implement KYC document upload
+- [x] 2.2 Implement KYC document upload
+
   - Create document type selector
   - Build file upload component with preview
   - Implement image compression
@@ -25,7 +27,8 @@
   - Create API integration for document submission
   - _Requirements: 1.3_
 
-- [ ] 2.3 Build face verification component
+- [x] 2.3 Build face verification component
+
   - Implement camera access request
   - Create live face capture interface
   - Add liveness detection (blink, turn head)
@@ -33,14 +36,16 @@
   - Build verification result screen
   - _Requirements: 1.4_
 
-- [ ] 2.4 Create account status screens
+- [x] 2.4 Create account status screens
+
   - Build "Approval Pending" screen
   - Create "Account Approved" welcome screen
   - Implement status polling mechanism
   - _Requirements: 1.5_
 
 - [ ] 3. Build Worker Ride Booking Interface
-- [ ] 3.1 Integrate interactive map
+- [x] 3.1 Integrate interactive map
+
   - Set up Google Maps / Mapbox integration
   - Implement current location detection
   - Create draggable pin for pickup location
@@ -48,14 +53,14 @@
   - Style map with custom markers
   - _Requirements: 2.1, 2.2_
 
-- [ ] 3.2 Create location input components
+- [x] 3.2 Create location input components
   - Build pickup location selector with map
   - Create destination address input with autocomplete
   - Implement address validation
   - Add recent locations feature
   - _Requirements: 2.3, 2.4_
 
-- [ ] 3.3 Implement ride booking flow
+- [x] 3.3 Implement ride booking flow
   - Create ride details display (fare, time, distance)
   - Build ride type selector (Standard/Premium)
   - Implement booking confirmation dialog

@@ -44,6 +44,15 @@ const WorkerApp = () => {
 
             {/* Main Content */}
             <div className="flex-1 p-4 space-y-4 overflow-y-auto">
+                {/* Quick Book Button */}
+                <button
+                    onClick={() => navigate('/book-ride')}
+                    className="w-full bg-orange hover:bg-orange-600 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 shadow-lg transition-colors"
+                >
+                    <MapPin className="w-5 h-5" />
+                    <span>Book New Ride</span>
+                </button>
+
                 {/* Next Ride Card */}
                 <div className="bg-white rounded-2xl shadow-lg p-6">
                     <div className="flex items-center justify-between mb-4">

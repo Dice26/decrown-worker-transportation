@@ -5,6 +5,7 @@
 - [-] 1. Add Worker Registration Flow to Existing WorkerApp
 
 
+
 - [ ] 1.1 Create registration pages
   - Add Welcome/Landing page before WorkerApp
   - Create PersonalInfoForm.jsx component
