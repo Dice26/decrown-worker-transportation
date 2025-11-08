@@ -3,7 +3,7 @@ services:
   - type: web
     name: decrown-worker-transportation
     env: docker
-    dockerfilePath: ./Dockerfile
+    dockerfilePath: ./Dockerfile.direct
     region: oregon
     plan: free
     branch: main

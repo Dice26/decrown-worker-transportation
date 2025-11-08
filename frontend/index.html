@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeCrown Worker Transportation - Reliable Transportation That Puts Workers First</title>
+    <meta name="description"
+        content="Premium worker transportation services with real-time tracking, automated billing, and safety-first approach. Serving businesses across the region.">
+    <link rel="canonical" href="https://www.gowithdecrown.com">
+    <link rel="icon" href="/favicon.ico">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="DeCrown Worker Transportation">
+    <meta property="og:description"
+        content="Premium worker transportation services with real-time tracking and automated billing">
+    <meta property="og:url" content="https://www.gowithdecrown.com">
+    <meta property="og:type" content="website">
+
+    <style>
+        /* DeCrown Transportation - Main Styles */
+        :root {
+            --color-primary: #003366;
+            --color-accent: #FF6600;
+            --color-success: #2E8B57;
+            --color-neutral: #F5F5F5;
+            --color-text-primary: #212529;
+            --color-text-secondary: #6C757D;
+            --color-bg-white: #FFFFFF;
+            --color-bg-light: #F8F9FA;
+            --color-bg-dark: #343A40;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            --spacing-2xl: 48px;
+            --spacing-3xl: 64px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.15);
+            --shadow-xl: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: var(--color-text-primary);
+            background-color: var(--color-bg-light);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-lg);
+        }
+
+        /* Header */
+        .header {
+            background: var(--color-bg-white);
+            border-bottom: 1px solid #E9ECEF;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header__container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 80px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-lg);
+        }
+
+        .header__logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--color-primary);
+            text-decoration: none;
+        }
+
+        .header__logo span {
+            color: var(--color-accent);
+        }
+
+        .header__actions {
+            display: flex;
+            gap: var(--spacing-md);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: 12px 24px;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn--primary {
+            background: var(--color-accent);
+            color: white;
+        }
+
+        .btn--primary:hover {
+            background: #E55A00;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn--secondary {
+            background: transparent;
+            color: var(--color-primary);
+            border: 2px solid var(--color-primary);
+        }
+
+        .btn--secondary:hover {
+            background: var(--color-primary);
+            color: white;
+        }
+
+        /* Hero */
+        .hero {
+            background: linear-gradient(135deg, var(--color-primary) 0%, #004080 100%);
+            color: white;
+            padding: var(--spacing-3xl) 0;
+            text-align: center;
+        }
+
+        .hero__title {
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .text-accent {
+            color: var(--color-accent);
+        }
+
+        .hero__description {
+            font-size: 20px;
+            margin-bottom: var(--spacing-xl);
+            opacity: 0.9;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero__actions {
+            display: flex;
+            gap: var(--spacing-lg);
+            justify-content: center;
+            margin-bottom: var(--spacing-3xl);
+        }
+
+        .hero__stats {
+            display: flex;
+            gap: var(--spacing-xl);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat__number {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--color-accent);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .stat__label {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        /* Services */
+        .services-overview {
+            padding: var(--spacing-3xl) 0;
+            background: var(--color-bg-white);
+        }
+
+        .section-title {
+            font-size: 36px;
+            font-weight: 600;
+            text-align: center;
+            color: var(--color-primary);
+            margin-bottom: var(--spacing-2xl);
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-xl);
+        }
+
+        .service-card {
+            background: var(--color-bg-white);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            box-shadow: var(--shadow-md);
+            border: 1px solid #E9ECEF;
+            transition: all 0.2s;
+        }
+
+        .service-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .service-card__icon {
+            width: 64px;
+            height: 64px;
+            background: var(--color-accent);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: var(--spacing-lg);
+            font-size: 32px;
+        }
+
+        .service-card__title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--color-primary);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .service-card__description {
+            color: var(--color-text-secondary);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .service-card__features {
+            list-style: none;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .service-card__features li {
+            padding-left: var(--spacing-lg);
+            margin-bottom: var(--spacing-sm);
+            position: relative;
+            color: var(--color-text-secondary);
+        }
+
+        .service-card__features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--color-success);
+            font-weight: bold;
+        }
+
+        /* API Status */
+        .api-status {
+            background: var(--color-bg-light);
+            padding: var(--spacing-3xl) 0;
+        }
+
+        .status-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            box-shadow: var(--shadow-md);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: 999px;
+            font-weight: 600;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .status-indicator.online {
+            background: #D4EDDA;
+            color: var(--color-success);
+        }
+
+        .status-indicator.offline {
+            background: #F8D7DA;
+            color: #DC3545;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .status-dot.pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .api-info {
+            display: grid;
+            gap: var(--spacing-md);
+        }
+
+        .api-info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--spacing-md);
+            background: var(--color-bg-light);
+            border-radius: var(--radius-md);
+        }
+
+        .api-info-label {
+            font-weight: 600;
+            color: var(--color-text-secondary);
+        }
+
+        .api-info-value {
+            color: var(--color-text-primary);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--color-bg-dark);
+            color: white;
+            padding: var(--spacing-2xl) 0;
+            text-align: center;
+        }
+
+        .footer__content {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .footer__logo {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .footer__tagline {
+            color: #ADB5BD;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .footer__links {
+            display: flex;
+            gap: var(--spacing-lg);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .footer__link {
+            color: #ADB5BD;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer__link:hover {
+            color: var(--color-accent);
+        }
+
+        .footer__copyright {
+            color: #6C757D;
+            font-size: 14px;
+            padding-top: var(--spacing-lg);
+            border-top: 1px solid #495057;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero__title {
+                font-size: 32px;
+            }
+
+            .hero__actions {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header__actions {
+                gap: var(--spacing-sm);
+            }
+
+            .btn {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header__container">
+            <a href="https://www.gowithdecrown.com" class="header__logo">
+                👑 De<span>Crown</span> 📍
+            </a>
+            <div class="header__actions">
+                <a href="https://app.gowithdecrown.com/login" class="btn btn--secondary">Login</a>
+                <a href="#get-started" class="btn btn--primary">Get Started</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1 class="hero__title">
+                Reliable Transportation That
+                <span class="text-accent">Puts Workers First</span>
+            </h1>
+            <p class="hero__description">
+                Premium worker transportation services with real-time tracking,
+                automated billing, and a safety-first approach. Trusted by
+                businesses across the region.
+            </p>
+            <div class="hero__actions">
+                <a href="#get-started" class="btn btn--primary">Start Your Service</a>
+                <a href="#demo" class="btn btn--secondary">Schedule Demo</a>
+            </div>
+            <div class="hero__stats">
+                <div class="stat">
+                    <div class="stat__number">10,000+</div>
+                    <div class="stat__label">Workers Transported Daily</div>
+                </div>
+                <div class="stat">
+                    <div class="stat__number">99.9%</div>
+                    <div class="stat__label">On-Time Performance</div>
+                </div>
+                <div class="stat">
+                    <div class="stat__number">500+</div>
+                    <div class="stat__label">Partner Companies</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Overview -->
+    <section class="services-overview">
+        <div class="container">
+            <h2 class="section-title">Comprehensive Transportation Solutions</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-card__icon">📍</div>
+                    <h3 class="service-card__title">Real-Time Tracking</h3>
+                    <p class="service-card__description">
+                        Monitor worker locations and transportation status in real-time
+                        with our advanced GPS tracking system.
+                    </p>
+                    <ul class="service-card__features">
+                        <li>Live location updates</li>
+                        <li>ETA notifications</li>
+                        <li>Route optimization</li>
+                        <li>Safety monitoring</li>
+                    </ul>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-card__icon">💳</div>
+                    <h3 class="service-card__title">Automated Billing</h3>
+                    <p class="service-card__description">
+                        Streamlined billing process with automated invoicing,
+                        usage tracking, and flexible payment options.
+                    </p>
+                    <ul class="service-card__features">
+                        <li>Monthly automated billing</li>
+                        <li>Usage-based pricing</li>
+                        <li>Detailed reporting</li>
+                        <li>Multiple payment methods</li>
+                    </ul>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-card__icon">🛡️</div>
+                    <h3 class="service-card__title">Safety First</h3>
+                    <p class="service-card__description">
+                        Comprehensive safety protocols, driver screening,
+                        and emergency response systems for worker protection.
+                    </p>
+                    <ul class="service-card__features">
+                        <li>Background-checked drivers</li>
+                        <li>Vehicle safety inspections</li>
+                        <li>Emergency response</li>
+                        <li>Insurance coverage</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- API Status -->
+    <section class="api-status">
+        <div class="container">
+            <h2 class="section-title">System Status</h2>
+            <div class="status-card">
+                <div id="apiStatus" class="status-indicator">
+                    <span class="status-dot pulse"></span>
+                    <span>Checking API...</span>
+                </div>
+                <div id="apiInfo" class="api-info">
+                    <div class="api-info-item">
+                        <span class="api-info-label">Status:</span>
+                        <span class="api-info-value">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer__content">
+                <div class="footer__logo">👑 DeCrown 📍</div>
+                <p class="footer__tagline">Reliable transportation that puts workers first</p>
+                <div class="footer__links">
+                    <a href="/services" class="footer__link">Services</a>
+                    <a href="/safety" class="footer__link">Safety</a>
+                    <a href="/about" class="footer__link">About</a>
+                    <a href="/contact" class="footer__link">Contact</a>
+                    <a href="https://docs.gowithdecrown.com" class="footer__link">Documentation</a>
+                    <a href="https://status.gowithdecrown.com" class="footer__link">Status</a>
+                </div>
+            </div>
+            <div class="footer__copyright">
+                © 2024 DeCrown Worker Transportation. All rights reserved. |
+                <a href="https://www.gowithdecrown.com" class="footer__link">www.gowithdecrown.com</a>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module">
+        // DeCrown Frontend - API Integration
+        const API_URL = 'https://decrown-worker-transportation.onrender.com';
+
+        // Check API Status on load
+        async function checkAPIStatus() {
+            const statusElement = document.getElementById('apiStatus');
+            const apiInfoElement = document.getElementById('apiInfo');
+
+            try {
+                const response = await fetch(`${API_URL}/`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    statusElement.className = 'status-indicator online';
+                    statusElement.innerHTML = '<span class="status-dot"></span><span>API Online ✅</span>';
+
+                    apiInfoElement.innerHTML = `
+                        <div class="api-info-item">
+                            <span class="api-info-label">Status:</span>
+                            <span class="api-info-value">${data.status}</span>
+                        </div>
+                        <div class="api-info-item">
+                            <span class="api-info-label">Version:</span>
+                            <span class="api-info-value">${data.version}</span>
+                        </div>
+                        <div class="api-info-item">
+                            <span class="api-info-label">Message:</span>
+                            <span class="api-info-value">${data.message}</span>
+                        </div>
+                        <div class="api-info-item">
+                            <span class="api-info-label">API URL:</span>
+                            <span class="api-info-value">${API_URL}</span>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                statusElement.className = 'status-indicator offline';
+                statusElement.innerHTML = '<span class="status-dot"></span><span>API Offline ❌</span>';
+
+                apiInfoElement.innerHTML = `
+                    <div class="api-info-item">
+                        <span class="api-info-label">Error:</span>
+                        <span class="api-info-value">Unable to connect to API</span>
+                    </div>
+                    <div class="api-info-item">
+                        <span class="api-info-label">API URL:</span>
+                        <span class="api-info-value">${API_URL}</span>
+                    </div>
+                    <div class="api-info-item">
+                        <span class="api-info-label">Details:</span>
+                        <span class="api-info-value">${error.message}</span>
+                    </div>
+                `;
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAPIStatus();
+            // Refresh API status every 30 seconds
+            setInterval(checkAPIStatus, 30000);
+        });
+    </script>
+</body>
+
+</html>
